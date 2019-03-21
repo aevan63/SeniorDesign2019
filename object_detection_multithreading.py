@@ -1,3 +1,7 @@
+# Based on code by Dat Tran on towardsdatascience.com
+# Blog post: https://towardsdatascience.com/building-a-real-time-object-recognition-app-with-tensorflow-and-opencv-b7a2b4ebdc32
+# github  repository: https://github.com/datitran/object_detector_app
+
 import os
 import cv2
 import time
@@ -102,18 +106,22 @@ if __name__ == '__main__':
         t.daemon = True
         t.start()
 
-    if (args.stream_in):
-        print('Reading from hls stream.')
-        video_capture = HLSVideoStream(src=args.stream_in).start()
-    else:
-        print('Reading from webcam.')
-        video_capture = WebcamVideoStream(src=args.video_source,
-                                      width=args.width,
-                                      height=args.height).start()
+    video_capture = cv2.VideoCapture(3)
+    video_capture.set(cv2.CAP_FFMPEG,True)
+    video_capture.set(cv2.CAP_PROP_FPS,30)
+
+#    if (args.stream_in):
+#        print('Reading from hls stream.')
+#        video_capture = HLSVideoStream(src=args.stream_in).start()
+#    else:
+#        print('Reading from webcam.')
+#        video_capture = WebcamVideoStream(src=args.video_source,
+#                                      width=args.width,
+#                                      height=args.height).start()
     fps = FPS().start()
 
     while True:
-        frame = video_capture.read()
+        ret,frame = video_capture.read()
         input_q.put(frame)
 
         t = time.time()
@@ -143,12 +151,13 @@ if __name__ == '__main__':
 
         print('[INFO] elapsed time: {:.2f}'.format(time.time() - t))
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(27) & 0xFF == ord('q'):
             break
 
     fps.stop()
     print('[INFO] elapsed time (total): {:.2f}'.format(fps.elapsed()))
     print('[INFO] approx. FPS: {:.2f}'.format(fps.fps()))
 
-    video_capture.stop()
+    #video_capture.stop()
+    video_capture.release()
     cv2.destroyAllWindows()
