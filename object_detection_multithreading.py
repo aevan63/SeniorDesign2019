@@ -1,4 +1,4 @@
-# Based on code by Dat Tran on towardsdatascience.com
+# Edited from original app by Dat Tran on towardsdatascience.com
 # Blog post: https://towardsdatascience.com/building-a-real-time-object-recognition-app-with-tensorflow-and-opencv-b7a2b4ebdc32
 # github  repository: https://github.com/datitran/object_detector_app
 
