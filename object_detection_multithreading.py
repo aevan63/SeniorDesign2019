@@ -1,4 +1,4 @@
-# Edited from original app by Dat Tran on towardsdatascience.com
+# Based on code by Dat Tran on towardsdatascience.com
 # Blog post: https://towardsdatascience.com/building-a-real-time-object-recognition-app-with-tensorflow-and-opencv-b7a2b4ebdc32
 # github  repository: https://github.com/datitran/object_detector_app
 
@@ -10,6 +10,7 @@ import numpy as np
 import subprocess as sp
 import json
 import tensorflow as tf
+#from PIL import ImageGrab
 
 from queue import Queue
 from threading import Thread
@@ -106,18 +107,16 @@ if __name__ == '__main__':
         t.daemon = True
         t.start()
 
-    video_capture = cv2.VideoCapture(3)
-    video_capture.set(cv2.CAP_FFMPEG,True)
-    video_capture.set(cv2.CAP_PROP_FPS,30)
-
-#    if (args.stream_in):
-#        print('Reading from hls stream.')
-#        video_capture = HLSVideoStream(src=args.stream_in).start()
-#    else:
-#        print('Reading from webcam.')
-#        video_capture = WebcamVideoStream(src=args.video_source,
-#                                      width=args.width,
-#                                      height=args.height).start()
+    if(args.video_source == 3):
+        print('Reading from external source.')
+        video_capture = cv2.VideoCapture(1)
+        video_capture.set(cv2.CAP_FFMPEG,True)
+        video_capture.set(cv2.CAP_PROP_FPS,30)
+    else:
+        print('Reading from webcam.')
+        video_capture = WebcamVideoStream(src=args.video_source,
+                                      width=args.width,
+                                      height=args.height).start()
     fps = FPS().start()
 
     while True:
@@ -158,6 +157,6 @@ if __name__ == '__main__':
     print('[INFO] elapsed time (total): {:.2f}'.format(fps.elapsed()))
     print('[INFO] approx. FPS: {:.2f}'.format(fps.fps()))
 
-    #video_capture.stop()
+    video_capture.stop()
     video_capture.release()
     cv2.destroyAllWindows()
